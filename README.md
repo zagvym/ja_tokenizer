@@ -69,7 +69,9 @@ Usage: ja_tokenizer [OPTIONS]
 
 Options:
   -i, --sysdic-path <SYSDIC_PATH>            System dictionary (in zstd) [default: system.dic.zst]
+  -u, --userdic-path <USERDIC_PATH>          User dictionary (csv)
   -S, --ignore-space                         Ignores white spaces in input strings
   -M, --max-grouping-len <MAX_GROUPING_LEN>  Maximum length of unknown words [default: 24]
+  -v, --verbose                              print token details
   -h, --help                                 Print help (see more with '--help')
 ```

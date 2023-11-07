@@ -1,2 +1,7 @@
 /target
+
+# system dictionary
 **/system.dic.zst
+
+# user dictionary
+**/user.csv

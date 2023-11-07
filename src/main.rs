@@ -21,9 +21,9 @@ struct Args {
     #[clap(short = 'i', long, default_value = DEFAULT_SYSDIC_PATH)]
     sysdic_path: PathBuf,
 
-    ///// User dictionary (csv)
-    // #[clap(short = 'u', long)]
-    // userdic_path: Option<PathBuf>,
+    /// User dictionary (csv)
+    #[clap(short = 'u', long)]
+    userdic_path: Option<PathBuf>,
 
     /// Ignores white spaces in input strings.
     #[clap(short = 'S', long)]
@@ -42,10 +42,12 @@ pub fn main() {
 
     // load vibrato's system dict
     let reader = zstd::Decoder::new(File::open(args.sysdic_path).unwrap()).unwrap();
-    let dict = Dictionary::read(reader).unwrap();
+    let mut dict = Dictionary::read(reader).unwrap();
 
-    // TODO: load user dict if exists
-    // let dict = dict.reset_user_lexicon_from_reader(Some(File::open(user_lex_csv).unwrap())).unwrap();
+    // load user dict if exists
+    if let Some(userdic_path) = args.userdic_path {
+        dict = dict.reset_user_lexicon_from_reader(Some(File::open(userdic_path).unwrap())).unwrap();
+    }
 
     // init tokenizer
     let tokenizer = Tokenizer::new(dict)

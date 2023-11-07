@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io;
 use std::path::PathBuf;
-use vibrato::{Dictionary, Tokenizer};
+use vibrato::{Dictionary, Tokenizer, token::Token};
 
 use clap::Parser;
 
@@ -32,6 +32,18 @@ struct Args {
     /// Maximum length of unknown words.
     #[clap(short = 'M', long, default_value_t = 24)]
     max_grouping_len: usize,
+
+    /// print token details
+    #[clap(short = 'v', long)]
+    verbose: bool,
+}
+
+fn fmt_token(t: Token<'_, '_>, verbose: bool) -> String {
+    if verbose {
+        return format!("{}: {},{},{},{}", t.surface(), t.left_id(), t.right_id(), t.word_cost(), t.feature());
+    }
+
+    return format!("{}: {}", t.surface(), t.feature());
 }
 
 /**
@@ -69,6 +81,7 @@ pub fn main() {
     println!("num_tokens: {}", worker.num_tokens());
 
     // print tokens
+    let fmt = |t: Token<'_, '_>| -> String { fmt_token(t, args.verbose) };
     worker.token_iter()
         // .filter(|t| { // 名詞のみ表示
         //     let words: Vec<&str> = t.feature().split(',').collect();
@@ -76,6 +89,6 @@ pub fn main() {
         //     subwords[0] == "名詞" || subwords[0] == "カスタム名詞"
         // })
         .for_each(|t| {
-            println!("{}: {}", t.surface(), t.feature());
+            println!("{}", fmt(t));
         });
 }
